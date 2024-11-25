@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 
+// Charger les variables d'environnement
 dotenv.config();
 
 const app = express();
@@ -11,15 +12,23 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB connecté avec succès'))
-  .catch((err) => console.error('Erreur de connexion MongoDB :', err));
-// Example route
+// Connexion à MongoDB
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('Connexion à MongoDB réussie'))
+  .catch((err) => {
+    console.error('Erreur de connexion MongoDB :', err);
+    process.exit(1); // Arrêter le serveur si la connexion échoue
+  });
+
+// Route de test
 app.get('/', (req, res) => {
-  res.send('Backend is running!');
+  res.send('Backend opérationnel et connecté à MongoDB !');
 });
 
-// Start server
+// Démarrage du serveur
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Serveur en écoute sur le port ${PORT}`));
