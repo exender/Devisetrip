@@ -1,2 +1,2 @@
 # Devisetrip
-Application web de gestion des dépenses
+Application web de gestion des dépenses en voyage 
