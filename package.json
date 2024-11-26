@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "mongoose": "^8.8.2",
     "react-router-dom": "^7.0.1"
   },
