@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', { username, password });
+    
+    // Simuler la validation des informations de session
+    if (username === 'Le Red' && password === 'LeRed') {
+      console.log('Connexion réussie :', { username, password });
+      navigate('/Dashboard'); // Redirection vers Dashboard.tsx
+    } else {
+      console.error('Nom d’utilisateur ou mot de passe incorrect.');
+    }
   };
 
   return (
