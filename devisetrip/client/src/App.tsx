@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
+import Logout from './pages/Logout';
 
 const App: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const App: React.FC = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/logout" element={<Logout />} />
           </Routes>
         </main>
         <Footer />

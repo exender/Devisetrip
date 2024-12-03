@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
     <header className="bg-gray-100 shadow-md">
@@ -26,11 +27,11 @@ const Header: React.FC = () => {
 
         {/* Navigation */}
         <nav
-          className={`${
+          className={`lg:flex lg:items-center lg:space-x-6 ${
             isMenuOpen ? 'block' : 'hidden'
-          } lg:flex lg:items-center lg:space-x-6`}
+          }`}
         >
-          {/* Menu items */}
+          {/* Menu Items */}
           <Link
             to="/trip"
             className="block text-gray-800 font-medium hover:text-blue-600 py-2 lg:py-0"
@@ -50,37 +51,52 @@ const Header: React.FC = () => {
             <i className="fas fa-exchange-alt mr-2"></i>Convertisseur de devises
           </Link>
 
-          {/* Profil avec sous-menu */}
-          <div className="relative group block lg:inline-block">
-            <Link
-              to="#"
+          {/* Profile with Dropdown */}
+          <div className="relative block lg:inline-block">
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className="block text-gray-800 font-medium hover:text-blue-600 py-2 lg:py-0 flex items-center"
             >
               <i className="fas fa-user mr-2"></i>Mon profil
-            </Link>
+              <i
+                className={`ml-2 fas ${
+                  isDropdownOpen ? 'fa-chevron-up' : 'fa-chevron-down'
+                }`}
+              ></i>
+            </button>
 
-            {/* Sous-menu */}
-            <ul className="absolute hidden group-hover:block bg-white shadow-lg rounded-lg mt-2 w-48 text-center">
-              <li>
-                <Link
-                  to="/infos"
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600"
-                >
-                  <i className="fas fa-info-circle mr-2"></i>Mes informations
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/logout"
-                  className="block px-4 py-2 text-red-600 hover:bg-gray-100"
-                >
-                  <i className="fas fa-sign-out-alt mr-2"></i>Se déconnecter
-                </Link>
-              </li>
-            </ul>
+            {/* Dropdown Menu */}
+            {isDropdownOpen && (
+              <ul className="absolute bg-white shadow-lg rounded-lg mt-2 w-48 text-center z-10">
+                <li>
+                  <Link
+                    to="/infos"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600"
+                  >
+                    <i className="fas fa-info-circle mr-2"></i>Mes informations
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/logout"
+                    className="block px-4 py-2 text-red-600 hover:bg-gray-100"
+                  >
+                    <i className="fas fa-sign-out-alt mr-2"></i>Se déconnecter
+                  </Link>
+                </li>
+              </ul>
+            )}
           </div>
         </nav>
       </div>
+
+      {/* Overlay for mobile menu */}
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-50 lg:hidden"
+          onClick={() => setIsMenuOpen(false)}
+        ></div>
+      )}
     </header>
   );
 };

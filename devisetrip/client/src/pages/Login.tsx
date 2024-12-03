@@ -14,7 +14,7 @@ const Login: React.FC = () => {
       console.log('Connexion réussie :', { username, password });
       navigate('/Dashboard'); // Redirection vers Dashboard.tsx
     } else {
-      console.error('Nom d’utilisateur ou mot de passe incorrect.');
+      alert('Nom d’utilisateur ou mot de passe incorrect.');
     }
   };
 
