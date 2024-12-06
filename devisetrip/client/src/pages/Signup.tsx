@@ -3,7 +3,7 @@ import { signup } from '../api';
 import { Link } from 'react-router-dom';
 
 const Signup = () => {
-  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [message, setMessage] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -12,14 +12,11 @@ const Signup = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Simule une action d'inscription pour ce tutoriel
     try {
-      // Exemple : appeler une API d'inscription ici
-      console.log('Données envoyées :', formData);
-      setMessage("Inscription réussie !");
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
-      setMessage('Une erreur est survenue.');
+      const response = await signup(formData); // Appel API
+      setMessage(response.data.message); // Afficher le message de succès
+    } catch (err: any) {
+      setMessage(err.response?.data?.message || 'Une erreur est survenue.');
     }
   };
 
@@ -32,12 +29,12 @@ const Signup = () => {
     className="flex items-center justify-center min-h-screen w-full bg-cover bg-center"
     style={{ backgroundImage: "url('../../images/alaska.jpg')" }}
   >
-      <div className="w-full max-w-md p-8 bg-white/10 backdrop-blur-md rounded-lg border border-white/50">
-      
-       <h2 className="text-2xl text-white font-bold text-center mb-6">Inscription</h2>
-       <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-       <div className="relative border-b border-gray-300 pb-2">
-            <label
+  
+  <div className="w-full max-w-md p-8 bg-white/10 backdrop-blur-md rounded-lg border border-white/50">
+    <h2 className="text-2xl text-white font-bold text-center mb-6">Inscription</h2>
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+        <div className="relative border-b border-gray-300 pb-2">
+        <label
               htmlFor="username"
               className="block text-gray-700 font-medium mb-1"
             >
@@ -45,20 +42,15 @@ const Signup = () => {
             </label>
             <input
               type="text"
-              id="username"
-              name="username"
-              value={formData.username}
+              name="name"
+              value={formData.name}
               onChange={handleChange}
-              required
               className="w-full bg-transparent text-white placeholder-transparent focus:ring-0 border-none outline-none peer"
               placeholder="Choisissez un nom"
             />
-            
           </div>
-
-           {/* Champ Email */}
-           <div className="relative border-b border-gray-300 pb-2">
-           <label
+          <div className="relative border-b border-gray-300 pb-2">
+          <label
               htmlFor="username"
               className="block text-gray-700 font-medium mb-1"
             >
@@ -74,22 +66,17 @@ const Signup = () => {
               required
             />
           </div>
-
-
           <div className="relative border-b border-gray-300 pb-2">
-            <label
-              htmlFor="password"
+            <label   htmlFor="password"
               className="block text-gray-700 font-medium mb-1"
             >
-              Mot de passe
+               Mot de passe
             </label>
             <input
               type="password"
-              id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              required
               className="w-full bg-transparent text-white placeholder-transparent focus:ring-0 border-none outline-none peer"
               placeholder="Saisissez un mot de passe"
             />
@@ -101,11 +88,7 @@ const Signup = () => {
             S'inscrire
           </button>
         </form>
-        {message && (
-          <p className="mt-4 text-center text-green-600 font-medium">
-            {message}
-          </p>
-        )}
+        {message && <p className="mt-4 text-center text-red-500">{message}</p>}
         <div className="mt-6 text-center">
           <p className="text-white-600">
             Vous avez déjà un compte ?{' '}
@@ -123,7 +106,6 @@ const Signup = () => {
         </button>
       </div>
     </div>
-
   );
 };
 

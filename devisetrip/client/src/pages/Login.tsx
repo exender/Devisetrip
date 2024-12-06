@@ -20,40 +20,39 @@ const Login: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen w-full bg-cover bg-center bg-[url('../../images/montagne.jpg')] relative">
-      <div className="w-96 p-8 text-center bg-white/10 border border-white/50 rounded-lg backdrop-blur-lg">
-        <h2 className="text-2xl font-bold text-white mb-6">Login</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col">
-          <div className="relative border-b-2 border-gray-400 mb-6">
+      <div className="w-full max-w-md p-8 bg-white/10 backdrop-blur-md rounded-lg border border-white/50">
+      <h2 className="text-2xl text-white font-bold text-center mb-6">Login</h2>
+        <form onSubmit={handleSubmit}className="flex flex-col space-y-4">
+        <div className="relative border-b border-gray-300 pb-2">
+        <label
+              htmlFor="username"
+              className="block text-white-700 font-medium mb-1"
+            >
+              Nom d'utilisateur
+            </label>
             <input
-              id="username"
               type="text"
+              name="name"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full h-10 bg-transparent outline-none text-white placeholder-transparent peer"
-              required
+              className="w-full bg-transparent text-white placeholder-transparent focus:ring-0 border-none outline-none peer"
+              placeholder="Choisissez un nom"
             />
-            <label
-              htmlFor="username"
-              className="absolute left-0 top-1/2 text-white text-base transform -translate-y-1/2 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-base peer-focus:translate-y-[-120%] peer-focus:text-sm transition-all"
-            >
-              Entrez votre nom d'utilisateur :
-            </label>
           </div>
-          <div className="relative border-b-2 border-gray-400 mb-6">
+          <div className="relative border-b border-gray-300 pb-2">
+            <label   htmlFor="password"
+              className="block text-white-700 font-medium mb-1"
+            >
+               Mot de passe
+            </label>
             <input
-              id="password"
               type="password"
+              name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full h-10 bg-transparent outline-none text-white placeholder-transparent peer"
-              required
+              className="w-full bg-transparent text-white placeholder-transparent focus:ring-0 border-none outline-none peer"
+              placeholder="Saisissez un mot de passe"
             />
-            <label
-              htmlFor="password"
-              className="absolute left-0 top-1/2 text-white text-base transform -translate-y-1/2 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-base peer-focus:translate-y-[-120%] peer-focus:text-sm transition-all"
-            >
-              Entrez votre mot de passe :
-            </label>
           </div>
           
           <button
