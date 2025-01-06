@@ -30,3 +30,8 @@ cd devisetrip/server
 npm install
 node index.js 
 ```
+
+
+```docker
+ docker-compose up --build
+```
