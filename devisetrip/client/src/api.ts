@@ -17,4 +17,4 @@ interface LoginData {
 }
 
 export const signup = (userData: SignupData) => API.post('/signup', userData);
-export const login = (loginData: { email: string; password: string }) => API.post('/login', loginData);
+export const login = (loginData: LoginData) => API.post('/login', loginData);
