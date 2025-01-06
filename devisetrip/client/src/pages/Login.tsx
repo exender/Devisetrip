@@ -7,22 +7,32 @@ const Login: React.FC = () => {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
+  // Gestion des changements dans les champs du formulaire
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Soumission du formulaire
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Validation simple
+    if (!formData.email || !formData.password) {
+      setMessage('Veuillez remplir tous les champs.');
+      return;
+    }
+
     try {
       const response = await login(formData); // Appel API pour le login
-      setMessage(response.data.message); // Afficher le message de succès
-      localStorage.setItem('user', JSON.stringify(response.data.user)); // Stocker l'utilisateur
-      navigate('/dashboard'); // Redirection vers Dashboard
+      setMessage(response.data.message); // Message de succès
+      localStorage.setItem('user', JSON.stringify(response.data.user)); // Stocker l'utilisateur dans le localStorage
+      navigate('/dashboard'); // Redirection vers le Dashboard
     } catch (err: any) {
       setMessage(err.response?.data?.message || 'Une erreur est survenue.');
     }
   };
 
+  // Bouton d'annulation
   const cancelForm = () => {
     window.location.href = '/'; // Redirection vers la page d'accueil
   };
