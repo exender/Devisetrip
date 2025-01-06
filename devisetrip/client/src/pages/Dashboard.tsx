@@ -34,7 +34,7 @@ const Dashboard: React.FC = () => {
           <h2 className="text-lg font-semibold text-gray-800 mb-3">Instructions Rapides</h2>
           <ul className="list-none pl-0 mb-6">
             <li className="mb-2">
-              1. <a href="/add_trip_form" className="text-blue-600 hover:underline">Créez un nouveau voyage</a>.
+              1. <a href="/AddTrip" className="text-blue-600 hover:underline">Créez un nouveau voyage</a>.
             </li>
             <li className="mb-2">
               2. <a href="/add_expense" className="text-blue-600 hover:underline">Ajoutez vos dépenses par jour</a>.
