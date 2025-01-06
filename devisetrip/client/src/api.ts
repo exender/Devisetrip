@@ -10,4 +10,11 @@ const API = axios.create({
   baseURL: '/api/users', // Proxy vers le backend
 });
 
+
+interface LoginData {
+  email: string;
+  password: string;
+}
+
 export const signup = (userData: SignupData) => API.post('/signup', userData);
+export const login = (loginData: LoginData) => API.post('/login', loginData);
