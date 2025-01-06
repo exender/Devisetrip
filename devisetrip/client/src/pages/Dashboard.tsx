@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 
+
 const Dashboard: React.FC = () => {
-  // Simulation du nom d'utilisateur depuis une session ou un contexte
-  const username = "Le Red"; // Remplacez par une donnée dynamique si besoin
+  // État pour stocker le nom de l'utilisateur
+  const [username, setUsername] = useState<string | null>(null);
+
+  // Récupération du nom de l'utilisateur depuis le localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUsername(user.name); // Assurez-vous que l'objet utilisateur contient une propriété `name`
+    }
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('../images/lac.avif')" }}>
@@ -13,7 +23,9 @@ const Dashboard: React.FC = () => {
       {/* Contenu principal */}
       <div className="main-content flex-1 p-5">
         <div className="container max-w-2xl mx-auto bg-white/70 backdrop-blur-lg p-5 rounded-lg shadow-lg">
-          <h1 className="text-xl font-bold text-gray-800 mb-4">Bienvenue, {username} !</h1>
+          <h1 className="text-xl font-bold text-gray-800 mb-4">
+            Bienvenue, {username ? username : 'utilisateur'} !
+          </h1>
           <p className="text-gray-600 mb-4">
             Ce site vous permet de suivre vos dépenses tout au long de votre voyage. Notez chaque achat,
             organisez vos dépenses par catégories, et obtenez un aperçu clair de votre budget en un coup d'œil.
@@ -42,11 +54,6 @@ const Dashboard: React.FC = () => {
           </a>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white text-center py-3 fixed bottom-0 w-full">
-        &copy; 2024 Votre Application
-      </footer>
     </div>
   );
 };
