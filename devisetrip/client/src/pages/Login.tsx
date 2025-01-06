@@ -1,75 +1,87 @@
 import React, { useState } from 'react';
+import { login } from '../api'; 
 import { Link, useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // Simuler la validation des informations de session
-    if (username === 'Le Red' && password === 'LeRed') {
-      console.log('Connexion réussie :', { username, password });
-      navigate('/Dashboard'); // Redirection vers Dashboard.tsx
-    } else {
-      alert('Nom d’utilisateur ou mot de passe incorrect.');
+    try {
+      const response = await login(formData); // Appel API pour le login
+      setMessage(response.data.message); // Afficher le message de succès
+      localStorage.setItem('user', JSON.stringify(response.data.user)); // Stocker l'utilisateur
+      navigate('/dashboard'); // Redirection vers Dashboard
+    } catch (err: any) {
+      setMessage(err.response?.data?.message || 'Une erreur est survenue.');
     }
   };
 
+  const cancelForm = () => {
+    window.location.href = '/'; // Redirection vers la page d'accueil
+  };
+
   return (
-    <div className="flex justify-center items-center min-h-screen w-full bg-cover bg-center bg-[url('../../images/montagne.jpg')] relative">
+    <div
+      className="flex items-center justify-center min-h-screen w-full bg-cover bg-center"
+      style={{ backgroundImage: "url('../../images/montagne.jpg')" }}
+    >
       <div className="w-full max-w-md p-8 bg-white/10 backdrop-blur-md rounded-lg border border-white/50">
-      <h2 className="text-2xl text-white font-bold text-center mb-6">Login</h2>
-        <form onSubmit={handleSubmit}className="flex flex-col space-y-4">
-        <div className="relative border-b border-gray-300 pb-2">
-        <label
-              htmlFor="username"
-              className="block text-white-700 font-medium mb-1"
-            >
-              Nom d'utilisateur
-            </label>
+        <h2 className="text-2xl text-white font-bold text-center mb-6">Connexion</h2>
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+          <div className="relative border-b border-gray-300 pb-2">
+            <label htmlFor="email" className="block text-white font-medium mb-1">Email</label>
             <input
-              type="text"
-              name="name"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               className="w-full bg-transparent text-white placeholder-transparent focus:ring-0 border-none outline-none peer"
-              placeholder="Choisissez un nom"
+              placeholder="Votre email"
+              required
             />
           </div>
           <div className="relative border-b border-gray-300 pb-2">
-            <label   htmlFor="password"
-              className="block text-white-700 font-medium mb-1"
-            >
-               Mot de passe
-            </label>
+            <label htmlFor="password" className="block text-white font-medium mb-1">Mot de passe</label>
             <input
               type="password"
               name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={handleChange}
               className="w-full bg-transparent text-white placeholder-transparent focus:ring-0 border-none outline-none peer"
-              placeholder="Saisissez un mot de passe"
+              placeholder="Votre mot de passe"
+              required
             />
           </div>
-          
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-white text-black font-semibold rounded border-2 border-transparent hover:border-white hover:bg-white/20 hover:text-white transition-all"
+            className="w-full bg-blue-500 text-white py-2 rounded font-bold hover:bg-blue-600 transition"
           >
             Se connecter
           </button>
         </form>
-        <div className="mt-8 text-center text-white">
-          <p className="text-sm">
+        {message && <p className="mt-4 text-center text-red-500">{message}</p>}
+        <div className="mt-6 text-center">
+          <p className="text-white">
             Pas encore inscrit ?{' '}
-            <Link to="/Signup" className="text-blue-300 hover:underline">
+            <Link to="/signup" className="text-blue-300 hover:underline">
               S'inscrire
             </Link>
           </p>
         </div>
+        <button
+          type="button"
+          onClick={cancelForm}
+          className="w-full mt-4 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition duration-200"
+        >
+          Annuler
+        </button>
       </div>
     </div>
   );

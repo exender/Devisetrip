@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const userRoutes = require('./routes/userRoutes'); // Gardez cette ligne
 
 // Charger les variables d'environnement
 dotenv.config();
@@ -29,10 +30,9 @@ app.get('/', (req, res) => {
   res.send('Backend opérationnel et connecté à MongoDB !');
 });
 
+// Utilisation des routes
+app.use('/api/users', userRoutes);
 
 // Démarrage du serveur
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Serveur en écoute sur le port ${PORT}`));
-
-const userRoutes = require('./routes/userRoutes');
-app.use('/api/users', userRoutes);
