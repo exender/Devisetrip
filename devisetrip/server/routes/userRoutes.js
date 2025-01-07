@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken'); // Import de jwt pour la génération des t
 const Utilisateur = require('../models/User'); // Modèle utilisateur
 const Trip = require('../models/Trip'); // Modèle pour les voyages
 const router = express.Router();
+const authMiddleware = require('../middleware/authMiddleware');
 
 // Route pour s'inscrire
 router.post('/signup', async (req, res) => {
@@ -75,12 +76,22 @@ router.post('/login', async (req, res) => {
 });
 
 // Route pour ajouter un voyage
-router.post('/addTrip', async (req, res) => {
+router.post('/addTrip', authMiddleware, async (req, res) => {
   const { title, destination, startDate, endDate, budget } = req.body;
+
   try {
     console.log('[ADD TRIP] Requête reçue pour le voyage :', title);
 
-    const newTrip = new Trip({ title, destination, startDate, endDate, budget });
+    // Créer un nouveau voyage avec l'ID de l'utilisateur connecté
+    const newTrip = new Trip({
+      title,
+      destination,
+      startDate,
+      endDate,
+      budget,
+      user: req.user.id, // Associe le voyage à l'utilisateur connecté
+    });
+
     await newTrip.save();
 
     console.log('[ADD TRIP] Voyage ajouté avec succès :', title);
@@ -90,5 +101,6 @@ router.post('/addTrip', async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de l’ajout du voyage.', error: err.message });
   }
 });
+
 
 module.exports = router;

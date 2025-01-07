@@ -21,13 +21,29 @@ const AddTrip: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/users/addTrip', formData); // Assurez-vous que le proxy est configuré
+      const token = localStorage.getItem('token'); // Récupérer le token depuis localStorage
+      if (!token) {
+        setMessage('Token non disponible. Veuillez vous reconnecter.');
+        return;
+      }
+  
+      const response = await axios.post(
+        '/api/users/addTrip',
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Ajouter le token dans l'en-tête
+          },
+        }
+      );
+  
       setMessage(response.data.message);
       setFormData({ title: '', destination: '', startDate: '', endDate: '', budget: '' }); // Réinitialiser le formulaire
     } catch (err: any) {
       setMessage(err.response?.data?.message || 'Une erreur est survenue.');
     }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
