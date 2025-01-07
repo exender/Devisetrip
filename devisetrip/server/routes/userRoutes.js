@@ -103,4 +103,21 @@ router.post('/addTrip', authMiddleware, async (req, res) => {
 });
 
 
+router.get('/getTrips', authMiddleware, async (req, res) => {
+  try {
+    console.log('[GET TRIPS] Requête reçue pour l’utilisateur :', req.user.id);
+
+    // Récupérer les voyages associés à l'utilisateur connecté
+    const trips = await Trip.find({ user: req.user.id });
+
+    console.log('[GET TRIPS] Voyages trouvés :', trips.length);
+    res.json(trips); // Retourne la liste des voyages
+  } catch (error) {
+    console.error('[GET TRIPS] Erreur lors de la récupération des voyages :', error);
+    res.status(500).json({ message: 'Erreur lors de la récupération des voyages.', error });
+  }
+});
+
+
+
 module.exports = router;

@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import Logout from './pages/Logout';
 import AddTrip from './pages/AddTrip';
 import AccountEditPage from './pages/AccountEditPage';
+import UserTrips from './pages/UserTrips';
 
 
 const App: React.FC = () => {
@@ -24,6 +25,7 @@ const App: React.FC = () => {
             <Route path="/logout" element={<Logout />} />
             <Route path="/AddTrip" element={<AddTrip />} />
             <Route path="/account/edit" element={<AccountEditPage />} />
+            <Route path="/trips" element={<UserTrips />} />
           </Routes>
         </main>
         <Footer />

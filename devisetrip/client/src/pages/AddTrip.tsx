@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { TextField, Button, Typography, Paper, Grid } from '@mui/material';
 
 const AddTrip: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,22 @@ const AddTrip: React.FC = () => {
   });
   const [message, setMessage] = useState<string>('');
 
+  const formatDate = (date: Date): string => {
+    return date.toISOString().split('T')[0];
+  };
+
+  useEffect(() => {
+    const today = new Date();
+    const endDate = new Date();
+    endDate.setDate(today.getDate() + 8);
+
+    setFormData((prevData) => ({
+      ...prevData,
+      startDate: formatDate(today),
+      endDate: formatDate(endDate),
+    }));
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -21,100 +38,102 @@ const AddTrip: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token'); // Récupérer le token depuis localStorage
+      const token = localStorage.getItem('token');
       if (!token) {
         setMessage('Token non disponible. Veuillez vous reconnecter.');
         return;
       }
-  
-      const response = await axios.post(
-        '/api/users/addTrip',
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Ajouter le token dans l'en-tête
-          },
-        }
-      );
-  
+
+      const response = await axios.post('/api/users/addTrip', formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       setMessage(response.data.message);
-      setFormData({ title: '', destination: '', startDate: '', endDate: '', budget: '' }); // Réinitialiser le formulaire
+      setFormData({ title: '', destination: '', startDate: '', endDate: '', budget: '' });
     } catch (err: any) {
       setMessage(err.response?.data?.message || 'Une erreur est survenue.');
     }
   };
-  
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
-        <h1 className="text-2xl font-bold mb-4 text-gray-700">Ajouter un voyage</h1>
+    <Grid container justifyContent="center" alignItems="center" className="min-h-screen bg-gray-100">
+      <Paper elevation={4} className="p-6 rounded-lg shadow-lg w-full max-w-md">
+        <Typography variant="h4" component="h1" className="mb-6 font-bold text-center text-gray-800">
+          Ajouter un voyage
+        </Typography>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Titre</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Destination</label>
-            <input
-              type="text"
-              name="destination"
-              value={formData.destination}
-              onChange={handleChange}
-              className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Date de début</label>
-            <input
-              type="date"
-              name="startDate"
-              value={formData.startDate}
-              onChange={handleChange}
-              className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Date de fin</label>
-            <input
-              type="date"
-              name="endDate"
-              value={formData.endDate}
-              onChange={handleChange}
-              className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Budget</label>
-            <input
-              type="number"
-              name="budget"
-              value={formData.budget}
-              onChange={handleChange}
-              className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <button
+          <TextField
+            label="Titre"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            fullWidth
+            required
+            variant="outlined"
+            className="bg-white rounded-lg"
+          />
+          <TextField
+            label="Destination"
+            name="destination"
+            value={formData.destination}
+            onChange={handleChange}
+            fullWidth
+            required
+            variant="outlined"
+            className="bg-white rounded-lg"
+          />
+          <TextField
+            label="Date de début"
+            name="startDate"
+            type="date"
+            value={formData.startDate}
+            onChange={handleChange}
+            fullWidth
+            required
+            variant="outlined"
+            InputLabelProps={{ shrink: true }}
+            className="bg-white rounded-lg"
+          />
+          <TextField
+            label="Date de fin"
+            name="endDate"
+            type="date"
+            value={formData.endDate}
+            onChange={handleChange}
+            fullWidth
+            required
+            variant="outlined"
+            InputLabelProps={{ shrink: true }}
+            className="bg-white rounded-lg"
+          />
+          <TextField
+            label="Budget (€)"
+            name="budget"
+            type="number"
+            value={formData.budget}
+            onChange={handleChange}
+            fullWidth
+            required
+            variant="outlined"
+            className="bg-white rounded-lg"
+          />
+          <Button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+            variant="contained"
+            color="primary"
+            fullWidth
+            className="mt-4 py-2"
           >
             Ajouter
-          </button>
+          </Button>
         </form>
-        {message && <p className="mt-4 text-center text-red-500">{message}</p>}
-      </div>
-    </div>
+        {message && (
+          <Typography variant="body2" color="error" align="center" className="mt-4">
+            {message}
+          </Typography>
+        )}
+      </Paper>
+    </Grid>
   );
 };
 

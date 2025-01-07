@@ -33,7 +33,7 @@ const Header: React.FC = () => {
         >
           {/* Menu Items */}
           <Link
-            to="/trip"
+            to="/trips"
             className="block text-gray-800 font-medium hover:text-blue-600 py-2 lg:py-0"
           >
             <i className="fas fa-plane mr-2"></i>Voyage en cours
