@@ -70,10 +70,11 @@ const Header: React.FC = () => {
               <ul className="absolute bg-white shadow-lg rounded-lg mt-2 w-48 text-center z-10">
                 <li>
                   <Link
-                    to="/infos"
+                    to="/account/edit"
                     className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600"
+                    onClick={() => setIsDropdownOpen(false)}
                   >
-                    <i className="fas fa-info-circle mr-2"></i>Mes informations
+                    <i className="fas fa-user-edit mr-2"></i>Mes informations
                   </Link>
                 </li>
                 <li>

@@ -20,9 +20,13 @@ mongoose
   .then(() => console.log('Connexion à MongoDB réussie'))
   .catch((err) => console.error('Erreur de connexion MongoDB :', err));
 
-// Routes
+// Import des routes
 const userRoutes = require('./routes/userRoutes');
+const accountRoutes = require('./routes/accountRoutes'); // Import des routes liées au compte
+
+// Utilisation des routes
 app.use('/api/users', userRoutes);
+app.use('/api/account', accountRoutes); // Ajout des routes pour /api/account
 
 // Route pour servir le frontend pour toutes les autres routes
 app.get('*', (req, res) => {
