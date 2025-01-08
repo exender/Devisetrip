@@ -45,7 +45,7 @@ const Header: React.FC = () => {
             <i className="fas fa-map-marked-alt mr-2"></i>Mes voyages passés
           </Link>
           <Link
-            to="/convertisseur"
+            to="/devises"
             className="block text-gray-800 font-medium hover:text-blue-600 py-2 lg:py-0"
           >
             <i className="fas fa-exchange-alt mr-2"></i>Convertisseur de devises
