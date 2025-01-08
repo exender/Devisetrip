@@ -49,7 +49,7 @@ const Dashboard: React.FC = () => {
           <p className="text-gray-600 mb-2">- Utilisez des catégories pour organiser vos dépenses.</p>
           <p className="text-gray-600 mb-4">- Consultez régulièrement vos rapports pour ajuster votre budget.</p>
 
-          <a href="/add_trip_form" className="inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition-colors">
+          <a href="/AddTrip" className="inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition-colors">
             Commencez votre voyage maintenant
           </a>
         </div>

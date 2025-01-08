@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Card, CardContent, Typography, Grid, Box, Chip } from '@mui/material';
 import { motion } from 'framer-motion'; // Pour les animations modernes
 import LocationOnIcon from '@mui/icons-material/LocationOn'; // Icône de localisation
+import Header from '../components/Header';
 
 interface Trip {
   _id: string;
@@ -11,6 +12,7 @@ interface Trip {
   startDate: string;
   endDate: string;
   budget: number;
+  budget_vac: number;
 }
 
 const UserTrips: React.FC = () => {
@@ -59,6 +61,11 @@ const UserTrips: React.FC = () => {
   }
 
   return (
+    <div className="min-h-screen flex flex-col bg-cover bg-center bg-no-repeat">
+      {/* Inclusion du Header */}
+      <Header />
+
+      <div className="main-content flex-1 p-5">
     <Box className="container mx-auto mt-10 p-4">
       <Typography variant="h4" component="h1" gutterBottom align="center" className="font-bold text-gray-800">
         Mes voyages
@@ -94,7 +101,13 @@ const UserTrips: React.FC = () => {
                       {new Date(trip.endDate).toLocaleDateString()}
                     </Typography>
                     <Chip
-                      label={`Budget : ${trip.budget} €`}
+                      label={`Budget pour l'hébergement et le transport : ${trip.budget} €`}
+                      color="primary"
+                      className="mt-3"
+                      variant="outlined"
+                    />
+                    <Chip
+                      label={`Budget pour les vacances : ${trip.budget_vac} €`}
                       color="primary"
                       className="mt-3"
                       variant="outlined"
@@ -107,6 +120,7 @@ const UserTrips: React.FC = () => {
         </Grid>
       )}
     </Box>
+    </div></div>
   );
 };
 

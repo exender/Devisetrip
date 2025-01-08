@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Header from '../components/Header';
 
 interface CountryList {
   [key: string]: string;
@@ -209,7 +210,12 @@ const Devises: React.FC = () => {
   };
 
   return (
-<div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-screen flex flex-col bg-cover bg-center bg-no-repeat">
+      {/* Inclusion du Header */}
+      <Header />
+
+      <div className="main-content flex-1 p-5">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br ">
   <div className="w-full max-w-sm bg-white p-6 rounded-lg shadow-lg">
     <header className="text-2xl font-bold text-center text-gray-700 mb-6">
       Currency Converter
@@ -217,16 +223,15 @@ const Devises: React.FC = () => {
     <form className="space-y-6">
       {/* Amount Input */}
       <div className="text-center">
-  <label className="block text-gray-600 text-sm mb-2">Enter Amount</label>
-  <input
-    type="number"
-    value={amount}
-    onChange={handleAmountChange}
-    min="1"
-    className="w-full h-12 px-4 bg-gray-800 text-white text-center border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none transition"
-  />
-</div>
-
+        <label className="block text-gray-600 text-sm mb-2">Enter Amount</label>
+        <input
+          type="number"
+          value={amount}
+          onChange={handleAmountChange}
+          min="1"
+          className="w-full h-12 px-4 bg-gray-800 text-white text-center border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none transition"
+        />
+      </div>
 
       {/* Currency Dropdowns */}
       <div className="flex items-center justify-between space-x-4">
@@ -310,6 +315,8 @@ const Devises: React.FC = () => {
       </button>
     </form>
   </div>
+</div>
+</div>
 </div>
 
   

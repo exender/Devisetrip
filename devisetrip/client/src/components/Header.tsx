@@ -9,7 +9,7 @@ const Header: React.FC = () => {
     <header className="bg-gray-100 shadow-md">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
         {/* Logo */}
-        <Link to="/home">
+        <Link to="/dashboard">
           <img
             src="../images/logo-tripexpenses.jfif"
             alt="Logo Trip Expense"
