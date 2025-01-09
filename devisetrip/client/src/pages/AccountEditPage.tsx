@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { updateAccount, getAccountInfo } from '../api';
+import Header from '../components/Header';
 
 const AccountEditPage = () => {
   const [formData, setFormData] = useState({
@@ -45,6 +46,11 @@ const AccountEditPage = () => {
   }
 
   return (
+    <div className="min-h-screen bg-cover bg-center bg-no-repeat">
+    {/* Inclusion du Header */}
+    <Header />
+
+    <div className="flex-1 p-5">
     <div className="container mx-auto mt-10 p-4">
       <h1 className="text-2xl font-bold mb-4">Modifier mes informations</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -84,7 +90,9 @@ const AccountEditPage = () => {
       </form>
       {message && <p className="mt-4 text-red-500">{message}</p>}
     </div>
+    </div></div>
   );
+  
 };
 
 export default AccountEditPage;

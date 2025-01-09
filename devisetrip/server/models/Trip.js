@@ -21,6 +21,10 @@ const tripSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  /*budget_vac: {
+    type: Number,
+    required: true,
+  },*/
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', // Référence au modèle User

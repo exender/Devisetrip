@@ -61,66 +61,72 @@ const UserTrips: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-cover bg-center bg-no-repeat">
+    <div className="min-h-screen bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('../images/vol.png')" }}>
       {/* Inclusion du Header */}
       <Header />
 
-      <div className="main-content flex-1 p-5">
-    <Box className="container mx-auto mt-10 p-4">
-      <Typography variant="h4" component="h1" gutterBottom align="center" className="font-bold text-gray-800">
-        Mes voyages
-      </Typography>
-      {trips.length === 0 ? (
-        <Typography align="center" color="textSecondary" className="text-lg">
-          Aucun voyage trouvé.
-        </Typography>
-      ) : (
-        <Grid container spacing={4}>
-          {trips.map((trip) => (
-            <Grid item xs={12} sm={6} md={4} key={trip._id}>
-              <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                whileHover={{ scale: 1.02, y: -5 }} // Effet de hover subtil
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
-              >
-                <Card className="shadow-lg hover:shadow-2xl transition-transform transform hover:-translate-y-2">
-                  {/* Bannière avec icône et destination */}
-                  <Box className="flex items-center justify-between p-4 bg-blue-500 text-white rounded-t-lg">
-                    <Typography variant="h6" component="div">
-                      {trip.destination}
-                    </Typography>
-                    <LocationOnIcon fontSize="large" />
-                  </Box>
-                  <CardContent>
-                    <Typography variant="h5" component="h2" gutterBottom className="font-semibold text-gray-800">
-                      {trip.title}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" className="mb-2">
-                      Dates : {new Date(trip.startDate).toLocaleDateString()} -{' '}
-                      {new Date(trip.endDate).toLocaleDateString()}
-                    </Typography>
-                    <Chip
-                      label={`Budget pour l'hébergement et le transport : ${trip.budget} €`}
-                      color="primary"
-                      className="mt-3"
-                      variant="outlined"
-                    />
-                    <Chip
-                      label={`Budget pour les vacances : ${trip.budget_vac} €`}
-                      color="primary"
-                      className="mt-3"
-                      variant="outlined"
-                    />
-                  </CardContent>
-                </Card>
-              </motion.div>
+      <div className="flex-1 p-5">
+      <Typography variant="h4" component="h1" className="font-bold text-white text-4xl text-center mb-12">
+  Mes voyages
+</Typography>
+
+<Box className="container mx-auto pt-10 p-4">
+        <Box className="container mx-auto mt-10 p-4">
+          <Typography variant="h4" component="h1" className="font-bold text-white text-4xl text-center mb-8">
+            Mes voyages
+          </Typography>
+          {trips.length === 0 ? (
+            <Typography align="center" color="textSecondary" className="text-lg">
+              Aucun voyage trouvé.
+            </Typography>
+          ) : (
+            <Grid container spacing={4}>
+              {trips.map((trip) => (
+                <Grid item xs={12} sm={6} md={4} key={trip._id}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    whileHover={{ scale: 1.02, y: -5 }} // Effet de hover subtil
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  >
+                    <Card className="shadow-lg hover:shadow-2xl transition-transform transform hover:-translate-y-2 bg-black bg-opacity-40 rounded-lg">
+                      {/* Bannière avec icône et destination */}
+                      <Box className="flex items-center justify-between p-4 bg-blue-500 text-white rounded-t-lg">
+                        <Typography variant="h6" component="div">
+                          {trip.destination}
+                        </Typography>
+                        <LocationOnIcon fontSize="large" />
+                      </Box>
+                      <CardContent>
+                        <Typography variant="h5" component="h2" gutterBottom className="font-semibold text-gray-800">
+                          {trip.title}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" className="mb-2">
+                          Dates : {new Date(trip.startDate).toLocaleDateString()} -{' '}
+                          {new Date(trip.endDate).toLocaleDateString()}
+                        </Typography>
+                        <Chip
+                          label={`Budget pour l'hébergement et le transport : ${trip.budget} €`}
+                          color="primary"
+                          className="mt-3"
+                          variant="outlined"
+                        />
+                        <Chip
+                          label={`Budget pour les vacances : ${trip.budget_vac} €`}
+                          color="primary"
+                          className="mt-3"
+                          variant="outlined"
+                        />
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
-      )}
-    </Box>
-    </div></div>
+          )}
+        </Box>
+      </div>
+    </div>
   );
 };
 
