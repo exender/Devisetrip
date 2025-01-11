@@ -7,6 +7,7 @@ import Header from '../components/Header';
 import AddExpense from './AddExpense';
 import TripDetails from './TripDetails';
 import { useNavigate } from 'react-router-dom'; // Pour la navigation
+import { deleteTrip } from '../api'
 
 interface Trip {
   _id: string;
@@ -71,6 +72,19 @@ const UserTrips: React.FC = () => {
   const handleCloseAddExpenseModal = () => {
     setOpenAddExpenseModal(false);
     setSelectedTripId(null);
+  };
+
+  const handleDeleteTrip = async (tripId: string) => {
+    const confirmation = window.confirm('Êtes-vous sûr de vouloir supprimer ce voyage ?');
+    if (!confirmation) return;
+  
+    const result = await deleteTrip(tripId);
+    if (result.success) {
+      setTrips((prevTrips) => prevTrips.filter((trip) => trip._id !== tripId));
+      alert(result.message);
+    } else {
+      alert(result.message);
+    }
   };
 
   if (loading) {
@@ -140,25 +154,36 @@ const UserTrips: React.FC = () => {
                           className="mt-3"
                           variant="outlined"
                         />
-                        <Box mt={2}>
-                          <Button
-                            onClick={() => handleOpenExpenseModal(trip._id)} // Voir les dépenses
-                            variant="contained"
-                            color="primary"
-                            fullWidth
-                            className="mb-2"
-                          >
-                            Voir les dépenses
-                          </Button>
-                          <Button
-                            onClick={() => handleOpenAddExpenseModal(trip._id)} // Ajouter une dépense
-                            variant="outlined"
-                            color="secondary"
-                            fullWidth
-                          >
-                            Ajouter une dépense
-                          </Button>
-                        </Box>
+                       <Box mt={2}>
+  <Button
+    onClick={() => handleOpenExpenseModal(trip._id)} // Voir les dépenses
+    variant="contained"
+    color="primary"
+    fullWidth
+    className="mb-2"
+  >
+    Voir les dépenses
+  </Button>
+  <Button
+    onClick={() => handleOpenAddExpenseModal(trip._id)} // Ajouter une dépense
+    variant="outlined"
+    color="secondary"
+    fullWidth
+  >
+    Ajouter une dépense
+  </Button>
+  <Button
+  onClick={() => handleDeleteTrip(trip._id)}
+  variant="outlined"
+  color="error"
+  fullWidth
+  sx={{ mt: 2 }}
+>
+  Supprimer le voyage
+</Button>
+
+</Box>
+
                       </CardContent>
                     </Card>
                   </motion.div>

@@ -8,6 +8,7 @@ const Expense = require('../models/Expense'); // Modèle pour les dépenses
 const router = express.Router();
 const authMiddleware = require('../middleware/authMiddleware');
 
+
 // Route pour s'inscrire
 router.post('/signup', async (req, res) => {
   const { name, email, password } = req.body;
@@ -270,7 +271,25 @@ router.get('/getInvitedUsers/:tripId', authMiddleware, async (req, res) => {
     console.error('[GET INVITED USERS] Erreur :', err);
     res.status(500).json({ message: 'Erreur lors de la récupération des utilisateurs invités.' });
   }
+
 });
+
+
+router.delete('/deleteTrip/:tripId', async (req, res) => {
+  try {
+    const tripId = req.params.tripId;
+    if (!mongoose.Types.ObjectId.isValid(tripId)) {
+      return res.status(400).json({ message: 'ID de voyage invalide.' });
+    }
+
+    await Trip.findByIdAndDelete(tripId);
+    res.status(200).json({ message: 'Voyage supprimé avec succès.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur lors de la suppression du voyage.' });
+  }
+});
+
 
 
 module.exports = router;

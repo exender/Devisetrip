@@ -60,6 +60,28 @@ export const login = async (loginData: LoginData) => {
   return response;
 };
 
+// Fonction pour supprimer un voyage
+export const deleteTrip = async (tripId: string) => {
+  try {
+    const token = localStorage.getItem('token'); // Récupère le token depuis localStorage
+    if (!token) {
+      throw new Error('Token manquant. Veuillez vous reconnecter.');
+    }
+
+    // Appel à l'API pour supprimer le voyage
+    await API.delete(`/deleteTrip/${tripId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return { success: true, message: 'Voyage supprimé avec succès.' };
+  } catch (error: any) {
+    return { success: false, message: error.response?.data?.message || 'Erreur lors de la suppression du voyage.' };
+  }
+};
+
+
 // Fonction pour ajouter un voyage
 export const addTrip = (tripData: TripData) => API.post('/addTrip', tripData);
 
