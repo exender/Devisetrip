@@ -100,11 +100,13 @@ router.post('/addTrip', authMiddleware, async (req, res) => {
 // Route pour récupérer les voyages
 router.get('/getTrips', authMiddleware, async (req, res) => {
   try {
-    console.log('[GET TRIPS] Requête reçue pour l’utilisateur :', req.user.id);
+    const trips = await Trip.find({
+      $or: [
+        { user: req.user.id }, // Voyages créés par l'utilisateur
+        { invitedUsers: req.user.id } // Voyages où l'utilisateur est invité
+      ]
+    });
 
-    const trips = await Trip.find({ user: req.user.id });
-
-    console.log('[GET TRIPS] Voyages trouvés :', trips.length);
     res.json(trips);
   } catch (err) {
     console.error('[GET TRIPS] Erreur :', err);
@@ -112,11 +114,10 @@ router.get('/getTrips', authMiddleware, async (req, res) => {
   }
 });
 
+
 // Route pour ajouter une dépense
 router.post('/addExpense', authMiddleware, async (req, res) => {
   const { tripId, amount, type } = req.body;
-
-  console.log('[ADD EXPENSE] Requête reçue :', { tripId, amount, type });
 
   if (!mongoose.Types.ObjectId.isValid(tripId)) {
     return res.status(400).json({ message: 'ID de voyage invalide.' });
@@ -128,16 +129,21 @@ router.post('/addExpense', authMiddleware, async (req, res) => {
       return res.status(404).json({ message: 'Voyage non trouvé.' });
     }
 
+    // Vérification des permissions
+    if (!trip.user.equals(req.user.id) && !trip.invitedUsers.includes(req.user.id)) {
+      return res.status(403).json({ message: 'Vous n’avez pas la permission d’ajouter une dépense à ce voyage.' });
+    }
+
     const newExpense = new Expense({ trip: tripId, amount, type });
     await newExpense.save();
 
-    console.log('[ADD EXPENSE] Dépense ajoutée avec succès :', newExpense);
     res.status(201).json({ message: 'Dépense ajoutée avec succès', expense: newExpense });
   } catch (err) {
     console.error('[ADD EXPENSE] Erreur :', err);
     res.status(500).json({ message: 'Erreur lors de l’ajout de la dépense.', error: err.message });
   }
 });
+
 
 // Route pour récupérer les dépenses d'un voyage
 router.get('/getExpenses/:tripId', authMiddleware, async (req, res) => {
@@ -209,5 +215,62 @@ router.delete('/deleteExpense/:expenseId', authMiddleware, async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la suppression de la dépense.', error: err.message });
   }
 });
+
+
+router.post('/inviteUser', authMiddleware, async (req, res) => {
+  const { tripId, email } = req.body;
+
+  if (!tripId || !email) {
+    return res.status(400).json({ message: 'tripId et email sont requis.' });
+  }
+
+  try {
+    const trip = await Trip.findById(tripId);
+    if (!trip) {
+      return res.status(404).json({ message: 'Voyage non trouvé.' });
+    }
+
+    const userToInvite = await Utilisateur.findOne({ email });
+    if (!userToInvite) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé.' });
+    }
+
+    if (trip.invitedUsers.includes(userToInvite._id)) {
+      return res.status(400).json({ message: 'Utilisateur déjà invité.' });
+    }
+
+    trip.invitedUsers.push(userToInvite._id);
+    await trip.save();
+
+    res.status(200).json({ message: 'Utilisateur invité avec succès.', invitedUser: userToInvite });
+  } catch (err) {
+    console.error('[INVITE USER] Erreur :', err);
+    res.status(500).json({ message: 'Erreur lors de l’invitation.', error: err.message });
+  }
+});
+
+
+
+
+router.get('/getInvitedUsers/:tripId', authMiddleware, async (req, res) => {
+  const { tripId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(tripId)) {
+    return res.status(400).json({ message: 'ID de voyage invalide.' });
+  }
+
+  try {
+    const trip = await Trip.findById(tripId).populate('invitedUsers', 'email');
+    if (!trip) {
+      return res.status(404).json({ message: 'Voyage non trouvé.' });
+    }
+
+    res.json(trip.invitedUsers);
+  } catch (err) {
+    console.error('[GET INVITED USERS] Erreur :', err);
+    res.status(500).json({ message: 'Erreur lors de la récupération des utilisateurs invités.' });
+  }
+});
+
 
 module.exports = router;
