@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { TextField, Button, Typography, Paper, Grid } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; // Ajoutez cette ligne
+import Select from 'react-select';
+import { FixedSizeList as List } from 'react-window';
+import { Button, Typography, Paper, Grid, TextField } from '@mui/material';
+import cities from '../assets/sorted_cities.json';
+import { useNavigate } from 'react-router-dom';
 
 const AddTrip: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -13,12 +16,7 @@ const AddTrip: React.FC = () => {
     budget_vac: '',
   });
   const [message, setMessage] = useState<string>('');
-
-  const navigate = useNavigate(); // Initialisez useNavigate ici
-
-  const formatDate = (date: Date): string => {
-    return date.toISOString().split('T')[0];
-  };
+  const navigate = useNavigate();
 
   useEffect(() => {
     const today = new Date();
@@ -32,15 +30,11 @@ const AddTrip: React.FC = () => {
     }));
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const formatDate = (date: Date): string => {
+    return date.toISOString().split('T')[0];
+  };
 
-    if (name === 'budget') {
-      // Validation pour le champ "budget"
-      const isValid = /^\d*\.?\d{0,3}$/.test(value) && (parseFloat(value) > 0 || value === '');
-      if (!isValid) return; // Si la saisie est invalide, ne rien faire
-    }
-
+  const handleChange = (name: string, value: any) => {
     setFormData({
       ...formData,
       [name]: value,
@@ -62,12 +56,37 @@ const AddTrip: React.FC = () => {
 
       setMessage(response.data.message);
       setFormData({ title: '', destination: '', startDate: '', endDate: '', budget: '', budget_vac: '' });
-
-      // Rediriger après l'ajout réussi du voyage
-      navigate('/trips');  // Remplacez '/nouveau-voyage' par le chemin de votre composant
+      navigate('/trips');
     } catch (err: any) {
       setMessage(err.response?.data?.message || 'Une erreur est survenue.');
     }
+  };
+
+  const cityOptions = cities.map((city) => ({ value: city, label: city }));
+
+  // Composant de virtualisation pour react-select
+  const CustomMenuList = (props: any) => {
+    const { options, children, getValue } = props;
+    const height = 300;
+    const itemHeight = 35;
+    const selectedIndex = options.findIndex((option: any) => option.value === getValue()[0]?.value);
+    const initialScrollOffset = selectedIndex >= 0 ? selectedIndex * itemHeight : 0;
+
+    return (
+      <List
+        height={height}
+        itemCount={children.length}
+        itemSize={itemHeight}
+        initialScrollOffset={initialScrollOffset}
+        width="100%"
+      >
+        {({ index, style }) => (
+          <div style={style}>
+            {children[index]}
+          </div>
+        )}
+      </List>
+    );
   };
 
   return (
@@ -81,28 +100,58 @@ const AddTrip: React.FC = () => {
             label="Titre"
             name="title"
             value={formData.title}
-            onChange={handleChange}
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
             fullWidth
             required
             variant="outlined"
             className="bg-white rounded-lg p-2 shadow-md"
           />
-          <TextField
-            label="Destination"
-            name="destination"
-            value={formData.destination}
-            onChange={handleChange}
-            fullWidth
-            required
-            variant="outlined"
-            className="bg-white rounded-lg p-2 shadow-md"
-          />
+      <Select
+  options={cityOptions}
+  onChange={(selectedOption) => handleChange('destination', selectedOption?.value)}
+  placeholder="Choisissez une destination"
+  isSearchable
+  components={{ MenuList: CustomMenuList }}
+  className="basic-single"
+  classNamePrefix="select"
+  menuPortalTarget={document.body} // Rend le menu dans un portail global
+  styles={{
+    menuPortal: (base) => ({ ...base, zIndex: 9999 }), // Assure que le menu est au premier plan
+    control: (base) => ({
+      ...base,
+      backgroundColor: 'white', // Fond blanc pour le champ
+      color: 'black', // Texte noir
+      borderColor: '#ccc',
+      '&:hover': {
+        borderColor: '#aaa', // Couleur de bordure au survol
+      },
+    }),
+    singleValue: (base) => ({
+      ...base,
+      color: 'black', // Texte noir pour la valeur sélectionnée
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: '#666', // Texte gris pour le placeholder
+    }),
+    menu: (base) => ({
+      ...base,
+      backgroundColor: 'white', // Fond blanc pour le menu déroulant
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isFocused ? '#f0f0f0' : 'white', // Couleur de fond pour l'option survolée
+      color: 'black', // Texte noir pour les options
+    }),
+  }}
+/>
+
           <TextField
             label="Date de Départ"
             name="startDate"
             type="date"
             value={formData.startDate}
-            onChange={handleChange}
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
             fullWidth
             required
             variant="outlined"
@@ -114,7 +163,7 @@ const AddTrip: React.FC = () => {
             name="endDate"
             type="date"
             value={formData.endDate}
-            onChange={handleChange}
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
             fullWidth
             required
             variant="outlined"
@@ -126,7 +175,7 @@ const AddTrip: React.FC = () => {
             name="budget"
             type="text"
             value={formData.budget}
-            onChange={handleChange}
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
             fullWidth
             required
             variant="outlined"
@@ -137,7 +186,7 @@ const AddTrip: React.FC = () => {
             name="budget_vac"
             type="text"
             value={formData.budget_vac}
-            onChange={handleChange}
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
             fullWidth
             required
             variant="outlined"

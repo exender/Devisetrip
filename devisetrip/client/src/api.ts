@@ -20,6 +20,7 @@ interface TripData {
   startDate: string;
   endDate: string;
   budget: number;
+  budget_vac: number;
 }
 
 // Instance pour les routes utilisateurs

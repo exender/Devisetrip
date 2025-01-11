@@ -62,7 +62,7 @@ const UserTrips: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('../images/vol.png')" }}>
-      {/* Inclusion du Header */}
+
       <Header />
 
       <div className="flex-1 p-5">
@@ -70,11 +70,9 @@ const UserTrips: React.FC = () => {
   Mes voyages
 </Typography>
 
-<Box className="container mx-auto pt-10 p-4">
+
+<Box className="container mx-auto pt-10 p-4" />
         <Box className="container mx-auto mt-10 p-4">
-          <Typography variant="h4" component="h1" className="font-bold text-white text-4xl text-center mb-8">
-            Mes voyages
-          </Typography>
           {trips.length === 0 ? (
             <Typography align="center" color="textSecondary" className="text-lg">
               Aucun voyage trouvé.

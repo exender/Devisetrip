@@ -77,7 +77,7 @@ router.post('/login', async (req, res) => {
 
 // Route pour ajouter un voyage
 router.post('/addTrip', authMiddleware, async (req, res) => {
-  const { title, destination, startDate, endDate, budget } = req.body;
+  const { title, destination, startDate, endDate, budget, budget_vac } = req.body;
 
   try {
     console.log('[ADD TRIP] Requête reçue pour le voyage :', title);
@@ -89,6 +89,7 @@ router.post('/addTrip', authMiddleware, async (req, res) => {
       startDate,
       endDate,
       budget,
+      budget_vac,
       user: req.user.id, // Associe le voyage à l'utilisateur connecté
     });
 
