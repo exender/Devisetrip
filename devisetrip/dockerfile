@@ -1,0 +1,53 @@
+# Étape 1 : Installer les dépendances globales
+FROM node:18 AS global-dependencies
+
+# Définir le répertoire de travail pour l'installation globale
+WORKDIR /app
+
+# Copier les fichiers package.json et package-lock.json globaux
+COPY package*.json ./
+
+# Installer les dépendances globales (si nécessaires)
+RUN npm install
+
+# Étape 2 : Construction du frontend (client)
+FROM node:18 AS build-frontend
+
+# Définir le répertoire de travail pour le frontend
+WORKDIR /app/client
+
+# Copier uniquement les fichiers de dépendances pour le client
+COPY client/package*.json ./
+
+# Installer les dépendances du frontend
+RUN npm install
+
+# Copier le reste des fichiers du frontend
+COPY client/ .
+
+# Construire le frontend
+RUN npm run build
+
+# Étape 3 : Préparation du backend (server)
+FROM node:18 AS build-backend
+
+# Définir le répertoire de travail pour le backend
+WORKDIR /app/server
+
+# Copier uniquement les fichiers de dépendances pour le backend
+COPY server/package*.json ./
+
+# Installer les dépendances du backend
+RUN npm install
+
+# Copier le reste des fichiers du backend
+COPY server/ .
+
+# Copier les fichiers construits du frontend dans le backend
+COPY --from=build-frontend /app/client/dist ./public
+
+# Exposer le port pour le backend
+EXPOSE 5000
+
+# Commande pour démarrer le serveur backend
+CMD ["node", "index.js"]

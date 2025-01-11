@@ -1,5 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Select from 'react-select';
+import { FixedSizeList as List } from 'react-window';
+import { Button, Typography, Paper, Grid, TextField } from '@mui/material';
+import cities from '../assets/sorted_cities.json';
+import { useNavigate } from 'react-router-dom';
 
 const AddTrip: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -8,97 +13,202 @@ const AddTrip: React.FC = () => {
     startDate: '',
     endDate: '',
     budget: '',
+    budget_vac: '',
   });
   const [message, setMessage] = useState<string>('');
+  const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    const today = new Date();
+    const endDate = new Date();
+    endDate.setDate(today.getDate() + 8);
+
+    setFormData((prevData) => ({
+      ...prevData,
+      startDate: formatDate(today),
+      endDate: formatDate(endDate),
+    }));
+  }, []);
+
+  const formatDate = (date: Date): string => {
+    return date.toISOString().split('T')[0];
+  };
+
+  const handleChange = (name: string, value: any) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/users/addTrip', formData); // Assurez-vous que le proxy est configuré
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setMessage('Token non disponible. Veuillez vous reconnecter.');
+        return;
+      }
+
+      const response = await axios.post('/api/users/addTrip', formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       setMessage(response.data.message);
-      setFormData({ title: '', destination: '', startDate: '', endDate: '', budget: '' }); // Réinitialiser le formulaire
+      setFormData({ title: '', destination: '', startDate: '', endDate: '', budget: '', budget_vac: '' });
+      navigate('/trips');
     } catch (err: any) {
       setMessage(err.response?.data?.message || 'Une erreur est survenue.');
     }
   };
 
+  const cityOptions = cities.map((city) => ({ value: city, label: city }));
+
+  // Composant de virtualisation pour react-select
+  const CustomMenuList = (props: any) => {
+    const { options, children, getValue } = props;
+    const height = 300;
+    const itemHeight = 35;
+    const selectedIndex = options.findIndex((option: any) => option.value === getValue()[0]?.value);
+    const initialScrollOffset = selectedIndex >= 0 ? selectedIndex * itemHeight : 0;
+
+    return (
+      <List
+        height={height}
+        itemCount={children.length}
+        itemSize={itemHeight}
+        initialScrollOffset={initialScrollOffset}
+        width="100%"
+      >
+        {({ index, style }) => (
+          <div style={style}>
+            {children[index]}
+          </div>
+        )}
+      </List>
+    );
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
-        <h1 className="text-2xl font-bold mb-4 text-gray-700">Ajouter un voyage</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Titre</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Destination</label>
-            <input
-              type="text"
-              name="destination"
-              value={formData.destination}
-              onChange={handleChange}
-              className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Date de début</label>
-            <input
-              type="date"
-              name="startDate"
-              value={formData.startDate}
-              onChange={handleChange}
-              className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Date de fin</label>
-            <input
-              type="date"
-              name="endDate"
-              value={formData.endDate}
-              onChange={handleChange}
-              className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Budget</label>
-            <input
-              type="number"
-              name="budget"
-              value={formData.budget}
-              onChange={handleChange}
-              className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <button
+    <Grid container justifyContent="center" alignItems="center" className="min-h-screen bg-gradient-to-r from-indigo-500 to-blue-500">
+      <Paper elevation={8} className="p-8 rounded-xl shadow-2xl w-full max-w-md">
+        <Typography variant="h4" component="h1" className="mb-6 font-bold text-center text-gray-800">
+          Ajouter un nouveau voyage
+        </Typography>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <TextField
+            label="Titre"
+            name="title"
+            value={formData.title}
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
+            fullWidth
+            required
+            variant="outlined"
+            className="bg-white rounded-lg p-2 shadow-md"
+          />
+      <Select
+  options={cityOptions}
+  onChange={(selectedOption) => handleChange('destination', selectedOption?.value)}
+  placeholder="Choisissez une destination"
+  isSearchable
+  components={{ MenuList: CustomMenuList }}
+  className="basic-single"
+  classNamePrefix="select"
+  menuPortalTarget={document.body} // Rend le menu dans un portail global
+  styles={{
+    menuPortal: (base) => ({ ...base, zIndex: 9999 }), // Assure que le menu est au premier plan
+    control: (base) => ({
+      ...base,
+      backgroundColor: 'white', // Fond blanc pour le champ
+      color: 'black', // Texte noir
+      borderColor: '#ccc',
+      '&:hover': {
+        borderColor: '#aaa', // Couleur de bordure au survol
+      },
+    }),
+    singleValue: (base) => ({
+      ...base,
+      color: 'black', // Texte noir pour la valeur sélectionnée
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: '#666', // Texte gris pour le placeholder
+    }),
+    menu: (base) => ({
+      ...base,
+      backgroundColor: 'white', // Fond blanc pour le menu déroulant
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isFocused ? '#f0f0f0' : 'white', // Couleur de fond pour l'option survolée
+      color: 'black', // Texte noir pour les options
+    }),
+  }}
+/>
+
+          <TextField
+            label="Date de Départ"
+            name="startDate"
+            type="date"
+            value={formData.startDate}
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
+            fullWidth
+            required
+            variant="outlined"
+            InputLabelProps={{ shrink: true }}
+            className="bg-white rounded-lg p-2 shadow-md"
+          />
+          <TextField
+            label="Date de Retour"
+            name="endDate"
+            type="date"
+            value={formData.endDate}
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
+            fullWidth
+            required
+            variant="outlined"
+            InputLabelProps={{ shrink: true }}
+            className="bg-white rounded-lg p-2 shadow-md"
+          />
+          <TextField
+            label="Budget Hotel + Transports"
+            name="budget"
+            type="text"
+            value={formData.budget}
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
+            fullWidth
+            required
+            variant="outlined"
+            className="bg-white rounded-lg p-2 shadow-md"
+          />
+          <TextField
+            label="Budget vacances (hors Transport & Hébergement)"
+            name="budget_vac"
+            type="text"
+            value={formData.budget_vac}
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
+            fullWidth
+            required
+            variant="outlined"
+            className="bg-white rounded-lg p-2 shadow-md"
+          />
+          <Button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+            variant="contained"
+            color="secondary"
+            fullWidth
+            className="mt-6 py-2 rounded-lg text-white hover:bg-indigo-600 transition-all"
           >
             Ajouter
-          </button>
+          </Button>
         </form>
-        {message && <p className="mt-4 text-center text-red-500">{message}</p>}
-      </div>
-    </div>
+        {message && (
+          <Typography variant="body2" color="error" align="center" className="mt-4">
+            {message}
+          </Typography>
+        )}
+      </Paper>
+    </Grid>
   );
 };
 

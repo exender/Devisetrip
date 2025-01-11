@@ -9,7 +9,7 @@ const Header: React.FC = () => {
     <header className="bg-gray-100 shadow-md">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
         {/* Logo */}
-        <Link to="/home">
+        <Link to="/dashboard">
           <img
             src="../images/logo-tripexpenses.jfif"
             alt="Logo Trip Expense"
@@ -33,7 +33,7 @@ const Header: React.FC = () => {
         >
           {/* Menu Items */}
           <Link
-            to="/trip"
+            to="/trips"
             className="block text-gray-800 font-medium hover:text-blue-600 py-2 lg:py-0"
           >
             <i className="fas fa-plane mr-2"></i>Voyage en cours
@@ -45,7 +45,7 @@ const Header: React.FC = () => {
             <i className="fas fa-map-marked-alt mr-2"></i>Mes voyages passés
           </Link>
           <Link
-            to="/convertisseur"
+            to="/devises"
             className="block text-gray-800 font-medium hover:text-blue-600 py-2 lg:py-0"
           >
             <i className="fas fa-exchange-alt mr-2"></i>Convertisseur de devises
@@ -70,10 +70,11 @@ const Header: React.FC = () => {
               <ul className="absolute bg-white shadow-lg rounded-lg mt-2 w-48 text-center z-10">
                 <li>
                   <Link
-                    to="/infos"
+                    to="/account/edit"
                     className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600"
+                    onClick={() => setIsDropdownOpen(false)}
                   >
-                    <i className="fas fa-info-circle mr-2"></i>Mes informations
+                    <i className="fas fa-user-edit mr-2"></i>Mes informations
                   </Link>
                 </li>
                 <li>
