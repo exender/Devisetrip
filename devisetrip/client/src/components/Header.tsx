@@ -11,7 +11,7 @@ const Header: React.FC = () => {
         {/* Logo */}
         <Link to="/dashboard">
           <img
-            src="../images/logo-tripexpenses.jfif"
+            src="/images/logo-tripexpenses.jfif"
             alt="Logo Trip Expense"
             className="w-24 h-auto"
           />

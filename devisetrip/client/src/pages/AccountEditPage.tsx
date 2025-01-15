@@ -46,51 +46,67 @@ const AccountEditPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cover bg-center bg-no-repeat">
-    {/* Inclusion du Header */}
-    <Header />
-
-    <div className="flex-1 p-5">
-    <div className="container mx-auto mt-10 p-4">
-      <h1 className="text-2xl font-bold mb-4">Modifier mes informations</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="min-h-screen bg-gray-100">
+  <Header />
+  
+  <div className="flex justify-center items-center p-6">
+    <div className="max-w-4xl w-full bg-white rounded-lg shadow-lg p-8">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">Informations de mon compte</h1>
+      
+      {/* Formulaire */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        
+        {/* Champ Nom */}
         <div>
-          <label className="block mb-1">Nom</label>
+          <label className="block text-lg text-gray-700 mb-2">Nom</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="border rounded px-4 py-2 w-full"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-md"
           />
         </div>
+
+        {/* Champ Email */}
         <div>
-          <label className="block mb-1">Email</label>
+          <label className="block text-lg text-gray-700 mb-2">Email</label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="border rounded px-4 py-2 w-full"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-md"
           />
         </div>
+
+        {/* Champ Mot de Passe */}
         <div>
-          <label className="block mb-1">Mot de passe</label>
+          <label className="block text-lg text-gray-700 mb-2">Mot de passe</label>
           <input
             type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="border rounded px-4 py-2 w-full"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-md"
           />
         </div>
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+
+        {/* Bouton de soumission */}
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-3 rounded-lg text-lg shadow-md hover:bg-blue-500 transition duration-300"
+        >
           Mettre à jour
         </button>
       </form>
-      {message && <p className="mt-4 text-red-500">{message}</p>}
+      
+      {/* Message */}
+      {message && <p className="mt-4 text-red-500 text-center">{message}</p>}
     </div>
-    </div></div>
+  </div>
+</div>
+
   );
   
 };
