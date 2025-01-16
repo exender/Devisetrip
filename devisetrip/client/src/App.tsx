@@ -13,6 +13,7 @@ import Devises from './pages/Devises';
 import DetailsTrip from './pages/DetailsTrip'; // Correction du nom de la page
 import AddExpense from './pages/AddExpense';
 import InviteUser from './pages/InviteUser';
+import CompletedTrips from './pages/FinishedTrips';
 
 const App: React.FC = () => {
   return (
@@ -34,6 +35,9 @@ const App: React.FC = () => {
             {/* Route pour ajouter une dépense */}
             <Route path="/trips/:tripId/add-expense" element={<AddExpense tripId={''} />} />
             <Route path="/trips/:tripId/invite" element={<InviteUser tripId={''} />} />
+      
+            <Route path="/finish_trip" element={<CompletedTrips />} />
+
           </Routes>
         </main>
         <Footer />

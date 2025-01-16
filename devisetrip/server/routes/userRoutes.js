@@ -290,6 +290,31 @@ router.delete('/deleteTrip/:tripId', async (req, res) => {
   }
 });
 
+router.get("/trips/ongoing", async (req, res) => {
+  const now = new Date();
+  try {
+    const ongoingTrips = await Trip.find({
+      startDate: { $lte: now },
+      endDate: { $gte: now },
+    });
+    res.status(200).json(ongoingTrips);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de la récupération des voyages en cours" });
+  }
+});
+
+// Route pour les voyages passés
+router.get("/trips/completed", async (req, res) => {
+  const now = new Date();
+  try {
+    const completedTrips = await Trip.find({
+      endDate: { $lt: now }, // Assurez-vous que le champ est bien "endDate"
+    });
+    res.status(200).json(completedTrips);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de la récupération des voyages passés", error: error.message });
+  }
+});
 
 
 module.exports = router;
